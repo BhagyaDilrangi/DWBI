@@ -1,0 +1,115 @@
+//////////////////////////////////////////////////////
+// DIMENSION: STUDENT
+//////////////////////////////////////////////////////
+
+Table dim_student {
+  student_key int [pk, increment]
+  student_id varchar(30) [unique]
+  gender varchar(20)
+  date_of_birth date
+}
+
+
+//////////////////////////////////////////////////////
+// DIMENSION: SUBJECT
+//////////////////////////////////////////////////////
+
+Table dim_subject {
+  subject_key int [pk, increment]
+  subject_code varchar(20)
+  subject_name varchar(100)
+  subject_category varchar(50)
+}
+
+
+//////////////////////////////////////////////////////
+// DIMENSION: STREAM
+//////////////////////////////////////////////////////
+
+Table dim_stream {
+  stream_key int [pk, increment]
+  stream_code varchar(20)
+  stream_name varchar(100)
+  stream_category varchar(100)
+}
+
+
+//////////////////////////////////////////////////////
+// DIMENSION: LOCATION
+//////////////////////////////////////////////////////
+
+Table dim_location {
+  location_key int [pk, increment]
+  district varchar(100)
+  province varchar(100)
+  examination_region varchar(100)
+}
+
+
+//////////////////////////////////////////////////////
+// DIMENSION: DATE
+//////////////////////////////////////////////////////
+
+Table dim_date {
+  date_key int [pk]
+  full_date date
+  day int
+  month int
+  month_name varchar(20)
+  quarter int
+  year int
+}
+
+
+//////////////////////////////////////////////////////
+// DIMENSION: GRADE
+//////////////////////////////////////////////////////
+
+Table dim_grade {
+  grade_key int [pk, increment]
+  grade_code varchar(10)
+  grade_description varchar(50)
+  grade_points decimal(5,2)
+  pass_flag boolean
+}
+
+
+//////////////////////////////////////////////////////
+// FACT TABLE: EXAM RESULT
+//////////////////////////////////////////////////////
+
+Table fact_exam_result {
+  result_key bigint [pk, increment]
+
+  student_key int [not null]
+  subject_key int [not null]
+  stream_key int [not null]
+  location_key int
+  date_key int [not null]
+  grade_key int
+
+  marks decimal(5,2)
+  z_score decimal(6,3)
+
+  pass_flag boolean
+  attempt_number int
+
+  candidate_count int
+}
+
+
+//////////////////////////////////////////////////////
+// RELATIONSHIPS
+//////////////////////////////////////////////////////
+
+Ref: fact_exam_result.student_key > dim_student.student_key
+
+Ref: fact_exam_result.subject_key > dim_subject.subject_key
+
+Ref: fact_exam_result.stream_key > dim_stream.stream_key
+
+Ref: fact_exam_result.location_key > dim_location.location_key
+
+Ref: fact_exam_result.date_key > dim_date.date_key
+
+Ref: fact_exam_result.grade_key > dim_grade.grade_key
